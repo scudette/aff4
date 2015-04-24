@@ -36,6 +36,18 @@ What is not yet supported:
 4. Splitting an AFF4 Image across multiple volumes.
 5. Support for signed statements or Bill of Materials.
 
+## Downloads
+
+The AFF4 imaging technology is utilized in the Pmem suite of memory acquisition
+tools from version 2.0 upwards. This means that the Pmem imagers are standard
+AFF4 imagers so they can also be used to acquire disks and logical files as
+well.
+
+For now please download the [Pmem
+imagers](https://github.com/google/rekall/releases) for all supported OS
+platforms in order to test and evaluate the AFF4 imaging technology.
+
+
 ### Notice
 
 This is not an official Google product (experimental or otherwise), it is just

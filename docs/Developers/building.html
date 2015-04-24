@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>AFF4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced Forensic File Format 4">
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+    <link href="/css/aff4.css" rel="stylesheet">
+    <link href="/css/asciidoc.css" rel="stylesheet">
+    <link href="/css/treeview.css" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></sc\
+ript>
+    <![endif]-->
+  </head>
+
+  <body>
+
+
+   <nav class="navbar navbar-inverse navbar-fixed-top"
+     role="navigation">
+     <div class="container-fluid">
+       <div class="navbar-header">
+         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigationbar">
+           <span class="sr-only">Toggle navigation</span>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+         </button>
+       </div>
+       <div class="navbar-collapse collapse" id="navigationbar">
+         <ul class="nav navbar-nav">
+
+        <li>
+          <a class="" href="/index.html">
+            AFF4
+          </a>
+        </li>
+
+        <li>
+          <a class="" href="/docs.html">
+            Documentation
+          </a>
+        </li>
+
+        <li>
+          <a class="" href="/code.html">
+            GitHub
+          </a>
+        </li>
+
+         </ul>
+         <form class="navbar-form navbar-right" role="search" action="/search.html">
+           <div class="form-group">
+             <input type="text" name="q" class="form-control" placeholder="Site Search">
+           </div>
+           <button type="submit" class="btn btn-default">
+             <span class="glyphicon glyphicon-search"></span>
+           </button>
+         </form>
+       </div> <!-- navbar-collapse -->
+     </div> <!-- container-fluid -->
+   </nav>
+
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-3">
+    
+ <a href="/docs/index.html" class="btn btn-default btn-lg btn-block">
+  <span class="glyphicon glyphicon-arrow-left"></span> docs
+ </a>
+
+ <a href='/docs/Developers/index.html' class="btn btn-default btn-lg btn-block">
+   Developers
+ </a>
+ <p>
+ <div class='css-treeview'>
+   <ul class='nav nav-stacked'>
+<li class="page_title_link">
+   <a href='/docs/Developers/building.html' class="tree-link activate_tooltip"  title="Building a statically linked imager.">
+      Building a statically linked imager.
+   </a>
+</li>
+</ul>
+ </div>
+
+  </div>
+
+  <div class="col-md-7">
+    <div class="aff4_content">
+      
+
+<nav class="navbar navbar-default" role="navigation">
+
+
+</nav>
+
+
+<h1>Building a statically linked imager.</h1>
+
+<div class="abstract">
+
+</div>
+
+
+
+
+
+<p>The following instructions are for building a statically linked imager for Linux
+and Windows. Unfortunately, Linux distributions no longer ship statically
+compiled libraries, hence one needs to build all dependencies themselves.</p>
+<p>In the following we create a directory structure for static libraries set using
+&ndash;prefix. This will force dependencies to be built from there instead of using
+the system&rsquo;s libraries.</p>
+<h2>Building for Linux.</h2>
+<div class="highlight"><pre><span class="x">export PREFIX=/home/scudette/build/static/</span>
+<span class="x">export CXXFLAGS=&quot;-I</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include&quot;</span>
+
+<span class="x">apt-get source libraptor2-dev</span>
+<span class="x">cd raptor2-2.0.13/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static --without-www LDFLAGS=&quot;-L/home/scudette/build/static/lib -static -static-libstdc++&quot; --enable-serializers=&quot;turtle ntriples&quot; --enable-parsers=&quot;turtle ntriples&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libpcre++-dev</span>
+<span class="x">cd libpcre++-0.9.5/</span>
+<span class="x">./autogen.sh</span>
+<span class="x">cp /usr/bin/libtool ./libtool</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">  --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source gflags</span>
+<span class="x">cd gflags-2.0/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">  --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">d ..</span>
+
+<span class="x">apt-get source  libgoogle-glog-dev</span>
+<span class="x">cd google-glog-0.3.3/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">  --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+<span class="err">#</span><span class="x"> A test will fail to build here but it should not matter.</span>
+
+<span class="x">apt-get source libyaml-cpp-dev</span>
+<span class="x">cd yaml-cpp-0.5.1/</span>
+<span class="x">cmake -DCMAKE_INSTALL_PREFIX:PATH=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> . &amp;&amp; make all install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libsnappy-dev</span>
+<span class="x">cd snappy-1.1.0/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">  --enable-static --without-gflags LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">cd aff4</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">  --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/libexec&quot; --enable-static-binaries</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+</pre></div>
+
+
+<h2>Building for windows.</h2>
+<p>The following instructions are for building windows binaries, on a Linux
+system. On Ubuntu systems one must install the mingw platform first (using
+<code>apt-get install g++-mingw-w64 mingw-w64</code>).</p>
+<div class="highlight"><pre><span class="x">export PREFIX=/home/scudette/build/mingw/</span>
+
+<span class="x">apt-get source zlib1g</span>
+<span class="x">cd zlib-1.2.8.dfsg/</span>
+<span class="x">make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32-</span>
+<span class="x">make -f win32/Makefile.gcc install INCLUDE_PATH=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include LIBRARY_PATH=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib BINARY_PATH==</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/bin</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libraptor2-dev</span>
+<span class="x">cd raptor2-2.0.13/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static --without-www LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 --enable-parsers=&quot;turtle ntriples&quot; --enable-serializers=&quot;turtle ntriples&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source pcre3</span>
+<span class="x">cd pcre3-8.31/</span>
+<span class="x">./autogen.sh</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CFLAGS=&quot;-static -mnop-fun-dllimport&quot; --disable-cpp</span>
+<span class="x">cp /usr/bin/libtool ./libtool</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libpcre++-dev</span>
+<span class="x">cd libpcre++-0.9.5/</span>
+<span class="x">./autogen.sh</span>
+<span class="x">cp /usr/bin/libtool ./libtool</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CXXFLAGS=&quot;-static -mnop-fun-dllimport -DPCRE_STATIC&quot; --with-pcre-include=&quot;</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include/&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source gflags</span>
+<span class="x">cd gflags-2.0/</span>
+<span class="x">touch src/port.h</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CFLAGS=&quot;-static -mnop-fun-dllimport&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+
+<span class="x">apt-get source  libgoogle-glog-dev</span>
+<span class="x">cd google-glog-0.3.3/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static --disable-shared LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CFLAGS=&quot;-static -mnop-fun-dllimport&quot; CXXFLAGS=&quot;-I</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include/ -Isrc/ -Isrc/windows/ -mnop-fun-dllimport -static -DGOOGLE_GLOG_DLL_DECL=&#39;&#39;&quot; --disable-frame-pointers</span>
+
+<span class="err">#</span><span class="x"> In src/config.h at end</span>
+
+<span class="cp">#</span><span class="nf">undef</span><span class="x"> HAVE_UNISTD_H</span>
+<span class="cp">#</span><span class="nf">undef</span><span class="x"> TEST_SRC_DIR</span>
+
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libyaml-cpp-dev</span>
+<span class="x">cd yaml-cpp-0.5.1/</span>
+<span class="x">cmake -DCMAKE_INSTALL_PREFIX:PATH=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> . &amp;&amp; make all install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libsnappy-dev</span>
+<span class="x">cd snappy-1.1.0/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CXXFLAGS=&quot;-static -mnop-fun-dllimport -I</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include/&quot;</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source liburiparser-dev</span>
+<span class="x">cd uriparser-0.7.5/</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CXXFLAGS=&quot;-static -mnop-fun-dllimport -I</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include/&quot; --disable-test --disable-doc</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+
+<span class="x">apt-get source libyaml-cpp-dev</span>
+<span class="x">cd yaml-cpp-0.5.1/</span>
+<span class="x">echo &quot;</span>
+<span class="err">#</span><span class="x"> the name of the target operating system</span>
+<span class="x">SET(CMAKE_SYSTEM_NAME Windows)</span>
+
+<span class="err">#</span><span class="x"> which compilers to use for C and C++</span>
+<span class="x">SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)</span>
+<span class="x">SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)</span>
+<span class="x">SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)</span>
+
+<span class="err">#</span><span class="x"> here is the target environment located</span>
+<span class="x">SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32 </span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> )</span>
+
+<span class="err">#</span><span class="x"> adjust the default behaviour of the FIND_XXX() commands:</span>
+<span class="err">#</span><span class="x"> search headers and libraries in the target environment, search</span>
+<span class="err">#</span><span class="x"> programs in the host environment</span>
+<span class="x">set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)</span>
+<span class="x">set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)</span>
+<span class="x">set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)</span>
+<span class="x">&quot; &gt; Toolchain-mingw32.cmake</span>
+
+<span class="x">cmake -DCMAKE_TOOLCHAIN_FILE=Toolchain-mingw32.cmake -DCMAKE_INSTALL_PREFIX:PATH=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> .</span>
+<span class="x">cd ..</span>
+
+<span class="x">cd aff4</span>
+<span class="x">./configure --prefix=</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x"> --enable-static LDFLAGS=&quot;-L</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/lib -static -static-libstdc++&quot; --host=i686-w64-mingw32 CXXFLAGS=&quot;-static -mnop-fun-dllimport -I</span><span class="p">$</span><span class="nv">PREFIX</span><span class="x">/include/&quot; --enable-static-binaries</span>
+<span class="x">make -j4 install</span>
+<span class="x">cd ..</span>
+</pre></div>
+
+
+<p>On very old versions of windows the binary might fail with a message &ldquo;unable to
+find strerror_s in msvcrt.dll&rdquo;. This is because such old versions do not contain
+the function strerror_s, but they do contain strerror. The easiest way to fix
+this is to hexedit the import table of the binary - simply find the string
+strerror_s and replace the _s with null bytes. This makes the same binary work
+fine on older windows versions.</p>
+
+<p>
+
+<nav class="navbar navbar-default" role="navigation">
+
+
+</nav>
+
+
+    </div>
+  </div>
+  <div class="col-md-2 sidebar">
+    <img src="/img/AFF4.png" class="logo"></img>
+
+  </div>
+</div>
+</div>
+  <script>
+   $(".activate_tooltip").tooltip();
+  </script>
+  </body>
+</html>
+
